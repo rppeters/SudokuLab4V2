@@ -358,6 +358,7 @@ public class Sudoku extends LatinSquare {
 			}
 		}
 	}
+	
 
 	/**
 	 * SetRegion - purpose of this method is to set the values of a given region
