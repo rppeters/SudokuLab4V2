@@ -2,6 +2,12 @@ package pkgGame;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -50,6 +56,9 @@ public class Sudoku extends LatinSquare {
 	 * @throws Exception
 	 *             if the iSize given doesn't have a whole number square root
 	 */
+	//private HashMap<Integer, Object>();
+	private Map<Integer, Cell> cellMap = new HashMap<Integer, Cell>();
+	
 	public Sudoku(int iSize) throws Exception {
 
 		this.iSize = iSize;
@@ -582,4 +591,63 @@ public class Sudoku extends LatinSquare {
 //		}
 //	}
 	
+	
+	private class Cell extends Sudoku {
+		
+		private int iRow;
+		private int iCol;
+		private ArrayList<Integer> listValidValues;
+		
+		public Cell(int iRow, int iCol) {
+			this.iRow = iRow;
+			this.iCol = iCol;
+		}
+		
+		public int getiRow() {
+			return iRow;
+		}
+		
+		public int getiCol() {
+			return iCol;
+		}
+		
+		public int hashCode() {
+			return Objects.hash(iRow, iCol);
+		}
+		
+		@Override 
+		public boolean equals(Object o) {
+			if (!(o instanceof Cell))
+				return false;
+			else {
+				return ((this.iRow == ((Cell) o).getiRow()) && (this.iCol == ((Cell) o).getiCol()));
+			}
+		}
+		
+		public ArrayList<Integer> getListValidValues() {
+			ArrayList<Integer> validValues = new ArrayList<Integer>();
+			
+			for (int i = 1; i <= iSize; i++) {
+				if (!doesElementExist(getRow(iRow), i) &&
+						!doesElementExist(getColumn(iCol), i) && 
+						!doesElementExist(getRegion(iCol, iRow), i)) {
+					validValues.add(i);
+				}
+			}
+			return validValues;
+		}
+		
+		public void setListValidValues(HashSet<Integer> hs) {
+			this.listValidValues = new ArrayList<Integer>(hs);
+		}
+		
+		public void shuffleValidValues() {
+			ArrayList<Integer> tempListValidValues = this.listValidValues;
+
+			Collections.shuffle(tempListValidValues, new Random());
+			
+			this.listValidValues = tempListValidValues;
+		}		
+		
+	}
 }
