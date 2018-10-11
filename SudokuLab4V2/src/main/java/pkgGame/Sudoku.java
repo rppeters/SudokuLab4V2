@@ -23,7 +23,6 @@ import pkgHelper.LatinSquare;
  *
  */
 public class Sudoku extends LatinSquare {
-
 	/**
 	 * 
 	 * iSize - the length of the width/height of the Sudoku puzzle.
@@ -57,7 +56,7 @@ public class Sudoku extends LatinSquare {
 	 *             if the iSize given doesn't have a whole number square root
 	 */
 	//private HashMap<Integer, Object>();
-	private Map<Integer, Cell> cellMap = new HashMap<Integer, Cell>();
+	private Map<Integer, Cell> cells = new HashMap<Integer, Cell>();
 	
 	public Sudoku(int iSize) throws Exception {
 
@@ -596,9 +595,10 @@ public class Sudoku extends LatinSquare {
 		
 		private int iRow;
 		private int iCol;
-		private ArrayList<Integer> listValidValues;
+		private ArrayList<Integer> lstValidValues;
 		
 		public Cell(int iRow, int iCol) {
+			super();
 			this.iRow = iRow;
 			this.iCol = iCol;
 		}
@@ -620,11 +620,12 @@ public class Sudoku extends LatinSquare {
 			if (!(o instanceof Cell))
 				return false;
 			else {
-				return ((this.iRow == ((Cell) o).getiRow()) && (this.iCol == ((Cell) o).getiCol()));
+				Cell c = (Cell) o;
+				return ((this.iRow == c.getiRow()) && (this.iCol == c.getiCol()));
 			}
 		}
 		
-		public ArrayList<Integer> getListValidValues() {
+		public ArrayList<Integer> getlstValidValues() {
 			ArrayList<Integer> validValues = new ArrayList<Integer>();
 			
 			for (int i = 1; i <= iSize; i++) {
@@ -637,17 +638,34 @@ public class Sudoku extends LatinSquare {
 			return validValues;
 		}
 		
-		public void setListValidValues(HashSet<Integer> hs) {
-			this.listValidValues = new ArrayList<Integer>(hs);
+		public void setlstValidValues(HashSet<Integer> hs) {
+			this.lstValidValues = new ArrayList<Integer>(hs);
 		}
 		
 		public void shuffleValidValues() {
-			ArrayList<Integer> tempListValidValues = this.listValidValues;
+			ArrayList<Integer> templstValidValues = this.lstValidValues;
 
-			Collections.shuffle(tempListValidValues, new Random());
+			Collections.shuffle(templstValidValues, new Random());
 			
-			this.listValidValues = tempListValidValues;
+			this.lstValidValues = templstValidValues;
 		}		
 		
+		public Cell GetNextCell(Cell c) {
+			int iRow = getiRow();
+			int iCol = getiCol();
+			
+			if (iRow == (iSize - 1) && iCol == (iSize - 1)) {
+				return null;
+			}
+			
+			iCol++;
+			if (iRow == (iSize - 1))
+			if (iCol >= iSize) {
+				iRow++;
+				iCol = 0;
+			}
+			
+			return cells.get(Objects.hash(iRow, iCol));
+		}
 	}
 }
