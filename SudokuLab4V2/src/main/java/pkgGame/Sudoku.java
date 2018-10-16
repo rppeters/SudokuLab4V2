@@ -2,6 +2,7 @@ package pkgGame;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import pkgHelper.LatinSquare;
@@ -55,7 +57,7 @@ public class Sudoku extends LatinSquare {
 	 * @throws Exception
 	 *             if the iSize given doesn't have a whole number square root
 	 */
-	//private HashMap<Integer, Object>();
+	
 	private Map<Integer, Cell> cells = new HashMap<Integer, Cell>();
 	
 	public Sudoku(int iSize) throws Exception {
@@ -589,18 +591,41 @@ public class Sudoku extends LatinSquare {
 //		return true;
 //		}
 //	}
+	private HashSet<Integer> getAllValidCellValues(int iCol, int iRow) {
+		return new HashSet<Integer>(cells.get(Objects.hash(iRow, iCol)).getLstValidValues());		
+	}
 	
+	private void SetCells() {
+		int iRow = 0;
+		int iCol = 0;
+		do {
+			Cell c = new Cell(iRow, iCol);
+			cells.put(c.hashCode(), c);
+			
+			iCol++;
+			if (iCol >= iSize) {
+				iRow++;
+				iCol = 0;
+			}
+
+		} while(iRow - 1 != iSize && iCol - 1 != iSize);
+	}
+	
+	private void fillRemaining() {
+		
+	}
 	
 	private class Cell extends Sudoku {
 		
 		private int iRow;
 		private int iCol;
-		private ArrayList<Integer> lstValidValues;
+		private ArrayList<Integer> lstValidValues = new ArrayList<Integer>();
 		
 		public Cell(int iRow, int iCol) {
 			super();
 			this.iRow = iRow;
 			this.iCol = iCol;
+			setlstValidValues();
 		}
 		
 		public int getiRow() {
@@ -625,7 +650,7 @@ public class Sudoku extends LatinSquare {
 			}
 		}
 		
-		public ArrayList<Integer> getlstValidValues() {
+		public ArrayList<Integer> getLstValidValues() {
 			ArrayList<Integer> validValues = new ArrayList<Integer>();
 			
 			for (int i = 1; i <= iSize; i++) {
@@ -642,7 +667,7 @@ public class Sudoku extends LatinSquare {
 			this.lstValidValues = new ArrayList<Integer>(hs);
 		}
 		
-		public void shuffleValidValues() {
+		public void ShuffleValidValues() {
 			ArrayList<Integer> templstValidValues = this.lstValidValues;
 
 			Collections.shuffle(templstValidValues, new Random());
@@ -659,7 +684,6 @@ public class Sudoku extends LatinSquare {
 			}
 			
 			iCol++;
-			if (iRow == (iSize - 1))
 			if (iCol >= iSize) {
 				iRow++;
 				iCol = 0;
