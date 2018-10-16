@@ -621,6 +621,20 @@ public class Sudoku extends LatinSquare {
 		}
 	}
 	
+	private void ShowAvailableValues() {
+		for (int iRow = 0; iRow < iSize; iRow++) {
+			for (int iCol = 0; iCol < iSize; iCol++) {
+				Cell c = cells.get(Objects.hash(iRow, iCol));
+				ArrayList<Integer> arrList = c.getLstValidValues();
+				System.out.print("Cell" + iRow + "-" + iCol + ": ");
+				for (Integer i : arrList) {
+					System.out.print(i + " ");
+				}
+				System.out.print("\n");
+			}
+		}
+	}
+	
 	private class Cell extends Sudoku {
 		
 		private int iRow;
