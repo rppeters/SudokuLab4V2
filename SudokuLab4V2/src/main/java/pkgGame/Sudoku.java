@@ -600,6 +600,8 @@ public class Sudoku extends LatinSquare {
 		int iCol = 0;
 		do {
 			Cell c = new Cell(iRow, iCol);
+			c.setlstValidValues(getAllValidCellValues(iRow, iCol));
+			c.ShuffleValidValues();
 			cells.put(c.hashCode(), c);
 			
 			iCol++;
@@ -613,6 +615,10 @@ public class Sudoku extends LatinSquare {
 	
 	private void fillRemaining() {
 		
+		Cell c = new Cell(0, 0);
+		while (c.GetNextCell(c) != null) {
+			//
+		}
 	}
 	
 	private class Cell extends Sudoku {
@@ -642,6 +648,8 @@ public class Sudoku extends LatinSquare {
 		
 		@Override 
 		public boolean equals(Object o) {
+			if (o == this)
+				return false;
 			if (!(o instanceof Cell))
 				return false;
 			else {
