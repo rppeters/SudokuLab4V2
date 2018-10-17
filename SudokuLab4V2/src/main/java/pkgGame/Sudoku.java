@@ -74,6 +74,10 @@ public class Sudoku extends LatinSquare {
 		int[][] puzzle = new int[iSize][iSize];
 		super.setLatinSquare(puzzle);
 		FillDiagonalRegions();
+		
+		SetCells();
+		FillDiagonalRegions();
+		fillRemaining(this.cells.get(Objects.hash(0, this.iSqrtSize)));
 	}
 
 	/**
@@ -613,12 +617,21 @@ public class Sudoku extends LatinSquare {
 		} while(iRow - 1 != iSize && iCol - 1 != iSize);
 	}
 	
-	private void fillRemaining() {
-		
-		Cell c = new Cell(0, 0);
-		while (c.GetNextCell(c) != null) {
-			//
+	private boolean fillRemaining(Cell c) {
+		//end recursion
+		if (c == null)
+			return true;
+		//choose value
+		for (Integer i : c.getLstValidValues()) {
+			this.getPuzzle()[c.getiRow()][c.getiCol()] = i;
+			//pushes forward to make sure it fills out. If not, restarts here with new value
+			if (fillRemaining(c.GetNextCell(c)))
+				return true;
+			//if value doesn't work, reset to 0 and continue selecting values
+			this.getPuzzle()[c.getiRow()][c.getiCol()] = 0;
 		}
+		//fail to input a value
+		return false;
 	}
 	
 	private void ShowAvailableValues() {
@@ -626,7 +639,7 @@ public class Sudoku extends LatinSquare {
 			for (int iCol = 0; iCol < iSize; iCol++) {
 				Cell c = cells.get(Objects.hash(iRow, iCol));
 				ArrayList<Integer> arrList = c.getLstValidValues();
-				System.out.print("Cell" + iRow + "-" + iCol + ": ");
+				System.out.print("Cell " + iRow + "-" + iCol + ": ");
 				for (Integer i : arrList) {
 					System.out.print(i + " ");
 				}
