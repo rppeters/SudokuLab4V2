@@ -114,7 +114,10 @@ public class Sudoku extends LatinSquare {
 	public int[][] getPuzzle() {
 		return super.getLatinSquare();
 	}
-
+	
+	public Map<Integer, Cell> getCells() {
+		return this.cells;
+	}
 	/**
 	 * getRegionNbr - Return region number based on given column and row
 	 * 
@@ -456,114 +459,50 @@ public class Sudoku extends LatinSquare {
 		}
 		return validValues;
 	}
-	
-	static int counter;
-	
-	public int getCounter() {
-		return counter;
-	}
-	
-	private static int stepBackAmount;
-	
-	public boolean fillRemaining(int iRow, int iCol) {
-		counter++;
-		if (counter > 2250)
-			return false;
-		//assume iRow and iCol will be the first value to be entered
-		int randomIndex;
-		if (iRow != iSize && iCol != iSize) {
-			//handle for randomly generated diagonals
-			if (this.getPuzzle()[iRow][iCol] != 0) {
-				iCol++;
-				if (iCol >= iSize) {
-					iRow++;
-					iCol = 0;
-				}
-				return fillRemaining(iRow, iCol);
-			}
-			
-			//backwards
-			System.out.println("Poss Values Size: " + this.validValues(iRow, iCol).size());
-			if (this.validValues(iRow, iCol).size() == 0) {
-				System.out.println("SIZE 0?" + iRow + " " + iCol + this.validValues(iRow, iCol));
-				do {
-					int[] stepsBackArray = {1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,3,4,5,6,7};
-					int stepsBack = stepsBackArray[ThreadLocalRandom.current().nextInt(0, 20)];
-					System.out.println("Steps taken backwards: " + stepsBack);
-					for (int i = 0; i < stepsBack; i++) {
-						iCol--;
-						if (iCol < 0) {
-							iRow--;
-							iCol = iSize - 1;
-							}
-						if (iRow < 0) {
-							iRow = 0;
-							iCol = 0;
-						}
-						this.getPuzzle()[iRow][iCol] = 0;
-					}	
-				} while (this.validValues(iRow, iCol).size() == 1);
-				System.out.println("backtracked to " + iRow + " " + iCol);
-				this.PrintPuzzle();
-			}
 
-			//forwards
-			System.out.println("Beginning " + iRow + " " + iCol);
-			System.out.println("VV " + this.validValues(iRow, iCol));
-			if (this.validValues(iRow, iCol).size() == 1) {
-				randomIndex = 0;
-			} else {
-				randomIndex = ThreadLocalRandom.current().nextInt(0, this.validValues(iRow, iCol).size());
-			}
-			System.out.println("RI " + randomIndex);
-			this.getPuzzle()[iRow][iCol] = this.validValues(iRow, iCol).get(randomIndex);
-			//update iRow and iCol
-			System.out.println("Finished with: " + iRow + " " + iCol);
-			System.out.println("Recursive Call Number: " + counter);
-			System.out.println("\n");
-			iCol++;
-			if (iCol >= iSize) {
-				iRow++;
-				iCol = 0;
-			}
-			this.PrintPuzzle();
-			return fillRemaining(iRow, iCol);
-		} else {
-			return true;
-		}
-	}
-	
-//	public boolean fillRemainingLooping(int iRow, int iCol) {
-//		//always set to 0
-//		iRow = 0;
-//		iCol = 0;
-//		//solve for each cell
-//		for (int i = 0; i < iSize * iSize; i++) {
-//			//ignore randomly generated diagonals
+//  first attempt at recursion before Cell class    
+//	static int counter;
+//	
+//	public int getCounter() {
+//		return counter;
+//	}	
+//	public boolean fillRemaining(int iRow, int iCol) {
+//		counter++;
+//		if (counter > 2250)
+//			return false;
+//		//assume iRow and iCol will be the first value to be entered
+//		int randomIndex;
+//		if (iRow != iSize && iCol != iSize) {
+//			//handle for randomly generated diagonals
 //			if (this.getPuzzle()[iRow][iCol] != 0) {
 //				iCol++;
 //				if (iCol >= iSize) {
 //					iRow++;
 //					iCol = 0;
 //				}
-//				continue;
+//				return fillRemaining(iRow, iCol);
 //			}
 //			
 //			//backwards
 //			System.out.println("Poss Values Size: " + this.validValues(iRow, iCol).size());
 //			if (this.validValues(iRow, iCol).size() == 0) {
-//				System.out.println("SIZE is 0 for: " + iRow + " " + iCol + this.validValues(iRow, iCol));
+//				System.out.println("SIZE 0?" + iRow + " " + iCol + this.validValues(iRow, iCol));
 //				do {
-//					iCol--;
-//					if (iCol < 0) {
-//						iRow--;
-//						iCol = iSize - 1;
-//					}
-//					if (iRow < 0) {
-//						iRow = 0;
-//						iCol = 0;
-//					}
-//					this.getPuzzle()[iRow][iCol] = 0;
+//					int[] stepsBackArray = {1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,3,4,5,6,7};
+//					int stepsBack = stepsBackArray[ThreadLocalRandom.current().nextInt(0, 20)];
+//					System.out.println("Steps taken backwards: " + stepsBack);
+//					for (int i = 0; i < stepsBack; i++) {
+//						iCol--;
+//						if (iCol < 0) {
+//							iRow--;
+//							iCol = iSize - 1;
+//							}
+//						if (iRow < 0) {
+//							iRow = 0;
+//							iCol = 0;
+//						}
+//						this.getPuzzle()[iRow][iCol] = 0;
+//					}	
 //				} while (this.validValues(iRow, iCol).size() == 1);
 //				System.out.println("backtracked to " + iRow + " " + iCol);
 //				this.PrintPuzzle();
@@ -572,7 +511,6 @@ public class Sudoku extends LatinSquare {
 //			//forwards
 //			System.out.println("Beginning " + iRow + " " + iCol);
 //			System.out.println("VV " + this.validValues(iRow, iCol));
-//			int randomIndex;
 //			if (this.validValues(iRow, iCol).size() == 1) {
 //				randomIndex = 0;
 //			} else {
@@ -590,16 +528,23 @@ public class Sudoku extends LatinSquare {
 //				iCol = 0;
 //			}
 //			this.PrintPuzzle();
-//			continue;
-//			}
-//		return true;
+//			return fillRemaining(iRow, iCol);
+//		} else {
+//			return true;
 //		}
 //	}
+	
 	private HashSet<Integer> getAllValidCellValues(int iCol, int iRow) {
 		return new HashSet<Integer>(cells.get(Objects.hash(iRow, iCol)).getLstValidValues());		
 	}
 	
-	private void SetCells() {
+	private void SetCells() throws Exception{
+		for (int iRow = 0; iRow < iSize; iRow++) {
+			for (int iCol = 0; iCol < iSize; iCol++) {
+				Cell c = new Cell(iRow, iCol);
+			}
+		}
+		
 		int iRow = 0;
 		int iCol = 0;
 		do {
@@ -607,7 +552,6 @@ public class Sudoku extends LatinSquare {
 			c.setlstValidValues(getAllValidCellValues(iRow, iCol));
 			c.ShuffleValidValues();
 			cells.put(c.hashCode(), c);
-			
 			iCol++;
 			if (iCol >= iSize) {
 				iRow++;
@@ -654,11 +598,10 @@ public class Sudoku extends LatinSquare {
 		private int iCol;
 		private ArrayList<Integer> lstValidValues = new ArrayList<Integer>();
 		
-		public Cell(int iRow, int iCol) {
+		public Cell(int iRow, int iCol) throws Exception{
 			super();
 			this.iRow = iRow;
 			this.iCol = iCol;
-			setlstValidValues();
 		}
 		
 		public int getiRow() {
@@ -703,11 +646,11 @@ public class Sudoku extends LatinSquare {
 		}
 		
 		public void ShuffleValidValues() {
-			ArrayList<Integer> templstValidValues = this.lstValidValues;
+			ArrayList<Integer> tempLstValidValues = this.lstValidValues;
 
-			Collections.shuffle(templstValidValues, new Random());
+			Collections.shuffle(tempLstValidValues, new Random());
 			
-			this.lstValidValues = templstValidValues;
+			this.lstValidValues = tempLstValidValues;
 		}		
 		
 		public Cell GetNextCell(Cell c) {

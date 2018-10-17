@@ -5,8 +5,12 @@ import static org.junit.Assert.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
 
 import org.junit.Test;
+
+import pkgGame.Sudoku;
 
 public class SudokuTest {
 
@@ -22,6 +26,7 @@ public class SudokuTest {
 		try {
 			Sudoku s1 = new Sudoku(9);
 		} catch (Exception e) {
+			e.printStackTrace();
 			fail("Test failed to build a Sudoku");
 		}
 
@@ -166,34 +171,45 @@ public class SudokuTest {
 		}
 	}
 	
-	@Test
-	public void fillRemaining_Test() throws Exception {
-		
-		int[][] puzzle = {{0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0},
-				{0, 0, 0, 0, 0, 0, 0, 0, 0}};
-		
-		int[][] puzzle4x4 = {{0, 0, 0, 0},
-				{0, 0, 0, 0},
-				{0, 0, 0, 0},
-				{0, 0, 0, 0}};
-		try {
-			Sudoku s1 = new Sudoku(puzzle);
-			s1.FillDiagonalRegions();
-			s1.PrintPuzzle();
-			
-			s1.fillRemaining(0, 3);
-			System.out.println("PUZZLE COMPLETED! Recursive Calls: " + s1.getCounter());
-			s1.PrintPuzzle();
-			assertTrue(s1.isSudoku());
-		} catch (Exception e) {
-			fail("Stack Overflow Error (Exceeded 2270ish recursive calls; occurs about 30% of time)");
-		}
-	}
+//	@Test
+//	public void SudokuGeneration_Test() throws Exception {
+//		Sudoku s = new Sudoku(9);
+//		s.PrintPuzzle();
+//	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
