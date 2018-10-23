@@ -199,42 +199,5 @@ public class SudokuTest {
 			e.printStackTrace();
 			fail("Test failed to build a sudoku (s3)");
 		}
-		//checks to do: is cells full? how far into recursion does it go? do all lines execute
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}	
 }

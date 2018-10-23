@@ -575,7 +575,7 @@ public class Sudoku extends LatinSquare {
 			for (int i = 0; i < iSize; i += iSqrtSize) {
 				if (iRow >= i && iRow < iSqrtSize + i && iCol >= i && iCol < iSqrtSize + i) {
 					iCol = i + iSqrtSize;
-					//recheck for out-of-puzzle
+					//re-check for out-of-puzzle
 					if (iRow == (iSize - 1) && iCol == (iSize - 1)) {
 						return null;
 					}
