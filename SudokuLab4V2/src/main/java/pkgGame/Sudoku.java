@@ -445,101 +445,10 @@ public class Sudoku extends LatinSquare {
 		
 		return doesElementExist(getRegion(iCol, iRow), iValue) ? false : true;
 	}
-
-	public ArrayList<Integer> validValues(int iRow, int iCol) {
-		
-		ArrayList<Integer> validValues = new ArrayList<Integer>();
-		
-		for (int i = 1; i <= iSize; i++) {
-			if (!doesElementExist(getRow(iRow), i) &&
-					!doesElementExist(getColumn(iCol), i) && 
-					!doesElementExist(getRegion(iCol, iRow), i)) {
-				validValues.add(i);
-			}
-		}
-		return validValues;
-	}
-
-//  first attempt at recursion before Cell class    
-//	static int counter;
-//	
-//	public int getCounter() {
-//		return counter;
-//	}	
-//	public boolean fillRemaining(int iRow, int iCol) {
-//		counter++;
-//		if (counter > 2250)
-//			return false;
-//		//assume iRow and iCol will be the first value to be entered
-//		int randomIndex;
-//		if (iRow != iSize && iCol != iSize) {
-//			//handle for randomly generated diagonals
-//			if (this.getPuzzle()[iRow][iCol] != 0) {
-//				iCol++;
-//				if (iCol >= iSize) {
-//					iRow++;
-//					iCol = 0;
-//				}
-//				return fillRemaining(iRow, iCol);
-//			}
-//			
-//			//backwards
-//			System.out.println("Poss Values Size: " + this.validValues(iRow, iCol).size());
-//			if (this.validValues(iRow, iCol).size() == 0) {
-//				System.out.println("SIZE 0?" + iRow + " " + iCol + this.validValues(iRow, iCol));
-//				do {
-//					int[] stepsBackArray = {1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,3,4,5,6,7};
-//					int stepsBack = stepsBackArray[ThreadLocalRandom.current().nextInt(0, 20)];
-//					System.out.println("Steps taken backwards: " + stepsBack);
-//					for (int i = 0; i < stepsBack; i++) {
-//						iCol--;
-//						if (iCol < 0) {
-//							iRow--;
-//							iCol = iSize - 1;
-//							}
-//						if (iRow < 0) {
-//							iRow = 0;
-//							iCol = 0;
-//						}
-//						this.getPuzzle()[iRow][iCol] = 0;
-//					}	
-//				} while (this.validValues(iRow, iCol).size() == 1);
-//				System.out.println("backtracked to " + iRow + " " + iCol);
-//				this.PrintPuzzle();
-//			}
-//
-//			//forwards
-//			System.out.println("Beginning " + iRow + " " + iCol);
-//			System.out.println("VV " + this.validValues(iRow, iCol));
-//			if (this.validValues(iRow, iCol).size() == 1) {
-//				randomIndex = 0;
-//			} else {
-//				randomIndex = ThreadLocalRandom.current().nextInt(0, this.validValues(iRow, iCol).size());
-//			}
-//			System.out.println("RI " + randomIndex);
-//			this.getPuzzle()[iRow][iCol] = this.validValues(iRow, iCol).get(randomIndex);
-//			//update iRow and iCol
-//			System.out.println("Finished with: " + iRow + " " + iCol);
-//			System.out.println("Recursive Call Number: " + counter);
-//			System.out.println("\n");
-//			iCol++;
-//			if (iCol >= iSize) {
-//				iRow++;
-//				iCol = 0;
-//			}
-//			this.PrintPuzzle();
-//			return fillRemaining(iRow, iCol);
-//		} else {
-//			return true;
-//		}
-//	}
 	
 	private HashSet<Integer> getAllValidCellValues(int iCol, int iRow) {
+		//Note: Skipping through the diagonal cells here doesn't work 
 		ArrayList<Integer> validValues = new ArrayList<Integer>();
-		
-		if (getPuzzle()[iRow][iCol] != 0)
-			return new HashSet<Integer>(new ArrayList<Integer>(getPuzzle()[iRow][iCol]));
-		
 		for (int i = 1; i <= iSize; i++) {
 			if (isValidValue(iRow, iCol, i))
 				validValues.add(i);
@@ -557,19 +466,13 @@ public class Sudoku extends LatinSquare {
 			}
 		}
 	}
-	public static int counter = 0;
-	public int getCounter() {
-		return counter;
-	}
 	
 	private boolean fillRemaining(Cell c) {
-		counter++;
 		//end recursion
 		if (c == null)
 			return true;
 		//choose value
-		for (int i : c.getLstValidValues()) {
-			System.out.println(i);
+		for (Integer i : c.getLstValidValues()) {
 			if (isValidValue(c.getiRow(), c.getiCol(), i)) {
 				this.getPuzzle()[c.getiRow()][c.getiCol()] = i;
 				//pushes forward to make sure it fills out. If not, restarts here with new value
@@ -662,7 +565,6 @@ public class Sudoku extends LatinSquare {
 		public Cell GetNextCell(Cell c) {
 			int iRow = getiRow();
 			int iCol = getiCol();
-			
 			if (iRow == (iSize - 1) && iCol == (iSize - 1)) {
 				return null;
 			}
@@ -673,6 +575,22 @@ public class Sudoku extends LatinSquare {
 				iCol = 0;
 			}
 			
+			//skip diagonals (do not consider filling in values for them)
+			for (int i = 0; i < iSize; i += iSqrtSize) {
+				if (iRow >= i && iRow < iSqrtSize + i && iCol >= i && iCol < iSqrtSize + i) {
+					iCol = i + iSqrtSize;
+					//recheck for out-of-puzzle
+					if (iRow == (iSize - 1) && iCol == (iSize - 1)) {
+						return null;
+					}
+					//update iCol if out of puzzle but not last row
+					if (iCol >= iSize) {
+						iRow++;
+						iCol = 0;
+					}
+					return cells.get(Objects.hash(iRow, iCol));
+				}
+			}
 			return cells.get(Objects.hash(iRow, iCol));
 		}
 	}

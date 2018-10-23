@@ -175,8 +175,9 @@ public class SudokuTest {
 	public void SudokuGeneration_Test() throws Exception {
 		Sudoku s = new Sudoku(9);
 		s.PrintPuzzle();
-		System.out.println(s.getCounter());
 		assertTrue(s.isSudoku());
+		
+		//checks to do: is cells full? how far into recursion does it go? do all lines execute
 	}
 	
 	
