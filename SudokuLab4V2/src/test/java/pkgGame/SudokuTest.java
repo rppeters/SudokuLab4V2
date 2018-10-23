@@ -173,10 +173,32 @@ public class SudokuTest {
 	
 	@Test
 	public void SudokuGeneration_Test() throws Exception {
-		Sudoku s = new Sudoku(9);
-		s.PrintPuzzle();
-		assertTrue(s.isSudoku());
+		try {
+			Sudoku s1 = new Sudoku(9);
+			s1.PrintPuzzle();
+			assertTrue(s1.isSudoku());
+		} catch(Exception e) {
+			e.printStackTrace();
+			fail("Test failed to build a sudoku (s1)");
+		}
 		
+		try {
+			Sudoku s2 = new Sudoku(4);
+			s2.PrintPuzzle();
+			assertTrue(s2.isSudoku());
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Test failed to build a sudoku (s2)");
+		}
+		
+		try {
+			Sudoku s3 = new Sudoku(16);
+			s3.PrintPuzzle();
+			assertTrue(s3.isSudoku());
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail("Test failed to build a sudoku (s3)");
+		}
 		//checks to do: is cells full? how far into recursion does it go? do all lines execute
 	}
 	
