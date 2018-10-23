@@ -171,11 +171,13 @@ public class SudokuTest {
 		}
 	}
 	
-//	@Test
-//	public void SudokuGeneration_Test() throws Exception {
-//		Sudoku s = new Sudoku(9);
-//		s.PrintPuzzle();
-//	}
+	@Test
+	public void SudokuGeneration_Test() throws Exception {
+		Sudoku s = new Sudoku(9);
+		s.PrintPuzzle();
+		System.out.println(s.getCounter());
+		assertTrue(s.isSudoku());
+	}
 	
 	
 	
